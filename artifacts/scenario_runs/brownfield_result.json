@@ -1,0 +1,54 @@
+{
+  "scenario_key": "brownfield",
+  "title": "Scenario 2: Brownfield (Rate Limiting & Caching Refactor)",
+  "raw_prompt": "Refactor the existing URL redirect endpoint to add distributed Redis-backed caching and sliding-window rate limiting (100 requests per minute per IP), ensuring zero breaking changes to existing client contracts.",
+  "run_id": "run_da3e64d529c6",
+  "final_state": "COMPLETED",
+  "elapsed_seconds": 1.37,
+  "ambiguity_score": 0.0,
+  "is_clarified": true,
+  "risk_tier": "HIGH",
+  "user_stories": [
+    "As an API consumer, I want to refactor the existing url redirect endpoint to add distributed redis-backed caching and sliding-window rate limiting ... so that the system reliably fulfills the request with low latency."
+  ],
+  "acceptance_criteria": [
+    "Given valid inputs, When the API is invoked, Then the response status must be 200/201 and match schema.",
+    "Given invalid or malicious inputs, When the API is invoked, Then the request must be safely rejected with appropriate error code.",
+    "Given high concurrency, When requests are executed, Then latency P99 must remain < 50ms without data corruption.",
+    "Criterion 1: Enforce sliding-window rate limit (100 req/min per IP).",
+    "Criterion 2: Enforce SSRF blocklist on internal IP ranges."
+  ],
+  "assumptions": [
+    "Enforce sliding-window rate limit (100 req/min per IP).",
+    "Enforce SSRF blocklist on internal IP ranges."
+  ],
+  "impact_report": {
+    "target_files": [
+      "src/url_shortener/presentation/api.py",
+      "src/url_shortener/application/use_cases.py"
+    ],
+    "affected_symbols": [
+      "CreateShortUrlUseCase",
+      "DeleteUrlUseCase",
+      "GetAnalyticsUseCase",
+      "ResolveRedirectUseCase",
+      "_record_click_event",
+      "create_app",
+      "create_short_url",
+      "delete_short_url",
+      "execute",
+      "get_short_url_metadata",
+      "get_url_analytics",
+      "health_check",
+      "metrics",
+      "redirect_short_url"
+    ],
+    "is_breaking_change": false,
+    "requires_schema_migration": false,
+    "impacted_test_files": [
+      "tests/integration/test_api.py"
+    ],
+    "blast_radius_score": 0.03,
+    "summary": "Impact Analysis: 2 file(s) modified, 14 symbol(s) affected. Breaking Change: False. Schema Migration: False. Blast Radius: 3%."
+  }
+}

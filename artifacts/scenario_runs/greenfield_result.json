@@ -1,0 +1,26 @@
+{
+  "scenario_key": "greenfield",
+  "title": "Scenario 1: Greenfield (Advanced Analytics Aggregator)",
+  "raw_prompt": "Implement an advanced Analytics Aggregator service for the URL shortener that collects daily click counts, tracks top referrers, identifies browser/device breakdown, and provides a time-series query API.",
+  "run_id": "run_28346d67ca39",
+  "final_state": "COMPLETED",
+  "elapsed_seconds": 1.76,
+  "ambiguity_score": 0.2,
+  "is_clarified": true,
+  "risk_tier": "LOW",
+  "user_stories": [
+    "As an API consumer, I want to implement an advanced analytics aggregator service for the url shortener that collects daily click counts, tracks top... so that the system reliably fulfills the request with low latency."
+  ],
+  "acceptance_criteria": [
+    "Given valid inputs, When the API is invoked, Then the response status must be 200/201 and match schema.",
+    "Given invalid or malicious inputs, When the API is invoked, Then the request must be safely rejected with appropriate error code.",
+    "Given high concurrency, When requests are executed, Then latency P99 must remain < 50ms without data corruption.",
+    "Criterion 1: Capture click timestamp, IP, referrer, and user-agent.",
+    "Criterion 2: Provide aggregation by date, device category, and top referrers."
+  ],
+  "assumptions": [
+    "Capture click timestamp, IP, referrer, and user-agent.",
+    "Provide aggregation by date, device category, and top referrers."
+  ],
+  "impact_report": null
+}

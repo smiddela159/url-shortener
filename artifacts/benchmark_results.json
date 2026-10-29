@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-10-29T01:00:18Z",
+  "benchmarks": {
+    "url_shortener_latency": {
+      "name": "URL Latency and Caching",
+      "passed": true,
+      "metrics": {
+        "creation_p50_ms": 2.012,
+        "creation_p95_ms": 2.324,
+        "creation_p99_ms": 2.608,
+        "redirect_p50_ms": 1.587,
+        "redirect_p95_ms": 2.167,
+        "redirect_p99_ms": 3.71,
+        "cache_hit_ratio": 1.0,
+        "cache_total_requests": 2000
+      }
+    },
+    "base62_collision_stress": {
+      "name": "Base62 Snowflake Collision Stress Test",
+      "passed": true,
+      "metrics": {
+        "total_generated": 100000,
+        "unique_keys": 100000,
+        "collisions": 0,
+        "duration_seconds": 0.193,
+        "throughput_codes_per_sec": 518135.0
+      }
+    },
+    "ssrf_attack_interception": {
+      "name": "SSRF Attack Interception",
+      "passed": true,
+      "metrics": {
+        "total_vectors": 15,
+        "blocked_vectors": 15,
+        "interception_rate_percent": 100.0
+      }
+    },
+    "automated_rollback_mttr": {
+      "name": "Automated Git Rollback MTTR",
+      "passed": true,
+      "metrics": {
+        "rollback_duration_ms": 44.376,
+        "target_threshold_ms": 2000.0,
+        "success": true
+      }
+    },
+    "audit_ledger_integrity": {
+      "name": "Audit Ledger Cryptographic Integrity",
+      "passed": true,
+      "metrics": {
+        "total_runs": 12,
+        "completed_runs": 12,
+        "success_rate_percent": 100.0,
+        "hash_chain_intact": true
+      }
+    }
+  },
+  "overall_status": "PASSED"
+}

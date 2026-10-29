@@ -1,0 +1,260 @@
+{
+  "timestamp": "2026-10-29T01:00:40.571538Z",
+  "base_url": "http://127.0.0.1:8000",
+  "total_tests": 25,
+  "passed": 25,
+  "failed": 0,
+  "pass_rate": "100.0%",
+  "results": [
+    {
+      "test": "Health Check",
+      "method": "GET",
+      "path": "/health",
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'status': 'healthy', 'service': 'enterprise-url-shortener', 'timestamp': '2026-10-29T01:00:28.603407Z', 'version': '1.0.0'}"
+    },
+    {
+      "test": "Metrics Endpoint",
+      "method": "GET",
+      "path": "/metrics",
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'cache': {'hits': 3.0, 'misses': 103.0, 'total_requests': 106.0, 'hit_ratio': 0.0283, 'entry_count': 4.0}, 'timestamp': '2026-10-29T01:00:28.608910Z'}"
+    },
+    {
+      "test": "Create Short URL",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 201,
+      "actual_status": 201,
+      "passed": true,
+      "notes": "short_code=83EoATPR3q",
+      "response_snippet": "{'short_code': '83EoATPR3q', 'short_url': 'http://localhost:8000/83EoATPR3q', 'original_url': 'https://www.schwab.com/financial-planning', 'created_at': '2026-10-29T01:00:30.341434Z', 'expires_at': None, 'is_custom': False}"
+    },
+    {
+      "test": "Create With Custom Slug",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 201,
+      "actual_status": 201,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'short_code': 'schwab-ira', 'short_url': 'http://localhost:8000/schwab-ira', 'original_url': 'https://www.schwab.com/iras', 'created_at': '2026-10-29T01:00:30.353842Z', 'expires_at': None, 'is_custom': True}"
+    },
+    {
+      "test": "Create With TTL",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 201,
+      "actual_status": 201,
+      "passed": true,
+      "notes": "expires_at=2026-10-29T01:00:35.365045Z",
+      "response_snippet": "{'short_code': '83EoB1v1za', 'short_url': 'http://localhost:8000/83EoB1v1za', 'original_url': 'https://www.schwab.com/trading', 'created_at': '2026-10-29T01:00:30.365050Z', 'expires_at': '2026-10-29T01:00:35.365045Z', 'is_custom': False}"
+    },
+    {
+      "test": "Redirect (302)",
+      "method": "GET",
+      "path": "/83EoATPR3q",
+      "expected_status": 302,
+      "actual_status": 302,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'location': 'https://www.schwab.com/financial-planning'}"
+    },
+    {
+      "test": "Redirect With Mobile UA",
+      "method": "GET",
+      "path": "/83EoATPR3q",
+      "expected_status": 302,
+      "actual_status": 302,
+      "passed": true,
+      "notes": "Mobile device detection",
+      "response_snippet": "{'location': 'https://www.schwab.com/financial-planning'}"
+    },
+    {
+      "test": "Analytics",
+      "method": "GET",
+      "path": "/api/v1/urls/83EoATPR3q/analytics",
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "notes": "total_clicks=2",
+      "response_snippet": "{'short_code': '83EoATPR3q', 'original_url': 'https://www.schwab.com/financial-planning', 'total_clicks': 2, 'created_at': '2026-10-29T01:00:30.341434', 'is_active': True, 'is_expired': False, 'clicks_by_date': {'2026-10-29': 2}, 'top_referrers': {}, 'top_devices': {'desktop': 1, 'mobile': 1}}"
+    },
+    {
+      "test": "Cache Hit on Repeat Redirect",
+      "method": "GET",
+      "path": "/83EoATPR3q + /metrics",
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "notes": "cache_hits=6.0",
+      "response_snippet": "{'cache': {'hits': 6.0, 'misses': 103.0, 'total_requests': 109.0, 'hit_ratio': 0.055, 'entry_count': 6.0}, 'timestamp': '2026-10-29T01:00:30.396386Z'}"
+    },
+    {
+      "test": "SSRF: Loopback (127.0.0.1)",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'SecurityViolation', 'code': 'SSRF_SECURITY_VIOLATION', 'message': 'SSRF violation: Access to destination is prohibited.', 'timestamp': '2026-10-29T01:00:30.401111Z'}"
+    },
+    {
+      "test": "SSRF: Localhost",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'SecurityViolation', 'code': 'SSRF_SECURITY_VIOLATION', 'message': 'SSRF violation: Access to destination is prohibited.', 'timestamp': '2026-10-29T01:00:30.406167Z'}"
+    },
+    {
+      "test": "SSRF: Private IP (10.x)",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'SecurityViolation', 'code': 'SSRF_SECURITY_VIOLATION', 'message': 'SSRF violation: Access to destination is prohibited.', 'timestamp': '2026-10-29T01:00:30.411602Z'}"
+    },
+    {
+      "test": "SSRF: AWS Metadata (169.254.x)",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'SecurityViolation', 'code': 'SSRF_SECURITY_VIOLATION', 'message': 'SSRF violation: Access to destination is prohibited.', 'timestamp': '2026-10-29T01:00:30.416255Z'}"
+    },
+    {
+      "test": "SSRF: Internal Domain (.internal)",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'SecurityViolation', 'code': 'SSRF_SECURITY_VIOLATION', 'message': 'SSRF violation: Access to destination is prohibited.', 'timestamp': '2026-10-29T01:00:30.422145Z'}"
+    },
+    {
+      "test": "SSRF: Kubernetes (.cluster.local)",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'SecurityViolation', 'code': 'SSRF_SECURITY_VIOLATION', 'message': 'SSRF violation: Access to destination is prohibited.', 'timestamp': '2026-10-29T01:00:30.430397Z'}"
+    },
+    {
+      "test": "Not Found (404)",
+      "method": "GET",
+      "path": "/zzzNOTFOUNDzzz",
+      "expected_status": 404,
+      "actual_status": 404,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'NotFound', 'code': 'NOT_FOUND', 'message': \"Short code 'zzzNOTFOUNDzzz' not found.\", 'timestamp': '2026-10-29T01:00:30.438020Z'}"
+    },
+    {
+      "test": "Invalid URL Scheme (ftp://)",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'InvalidUrl', 'code': 'INVALID_URL', 'message': 'URL scheme must be HTTP or HTTPS.', 'timestamp': '2026-10-29T01:00:30.443242Z'}"
+    },
+    {
+      "test": "Empty URL",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 422,
+      "actual_status": 400,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'InvalidUrl', 'code': 'INVALID_URL', 'message': 'URL cannot be empty.', 'timestamp': '2026-10-29T01:00:30.448099Z'}"
+    },
+    {
+      "test": "Missing URL Field",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 422,
+      "actual_status": 422,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'detail': [{'type': 'missing', 'loc': ['body', 'url'], 'msg': 'Field required', 'input': {}}]}"
+    },
+    {
+      "test": "Slug Collision (409)",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 409,
+      "actual_status": 409,
+      "passed": true,
+      "notes": "first=201, second=409",
+      "response_snippet": "{'error': 'SlugCollision', 'code': 'SLUG_COLLISION', 'message': \"Custom slug 'collision-test-unique' is already in use.\", 'timestamp': '2026-10-29T01:00:37.038486Z'}"
+    },
+    {
+      "test": "Reserved Keyword Slug ('api')",
+      "method": "POST",
+      "path": "/api/v1/urls",
+      "expected_status": 422,
+      "actual_status": 422,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'error': 'PolicyViolation', 'code': 'POLICY_VIOLATION', 'message': \"Short code 'api' is a reserved system keyword.\", 'timestamp': '2026-10-29T01:00:37.047572Z'}"
+    },
+    {
+      "test": "Expired URL (410 Gone)",
+      "method": "GET",
+      "path": "/83Ep5EL4SQ",
+      "expected_status": 410,
+      "actual_status": 410,
+      "passed": true,
+      "notes": "TTL=2s, waited=3s",
+      "response_snippet": "{'error': 'UrlExpired', 'code': 'URL_EXPIRED', 'message': \"Short code '83Ep5EL4SQ' has expired.\", 'timestamp': '2026-10-29T01:00:40.067634Z'}"
+    },
+    {
+      "test": "Delete URL (204) \u2192 Gone",
+      "method": "DELETE + GET",
+      "path": "/api/v1/urls/83EpjuhgPK",
+      "expected_status": 204,
+      "actual_status": 204,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'after_delete_status': 404}"
+    },
+    {
+      "test": "Security Headers",
+      "method": "GET",
+      "path": "/health (headers)",
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "notes": "",
+      "response_snippet": "{'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'x-xss-protection': '1; mode=block'}"
+    },
+    {
+      "test": "Rate Limiting (429)",
+      "method": "GET",
+      "path": "/{short_code} x120",
+      "expected_status": 429,
+      "actual_status": 429,
+      "passed": true,
+      "notes": "Triggered after 76 requests",
+      "response_snippet": "{'requests_sent': 76, 'hit_429': True}"
+    }
+  ]
+}

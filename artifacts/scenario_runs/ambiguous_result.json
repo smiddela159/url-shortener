@@ -1,0 +1,26 @@
+{
+  "scenario_key": "ambiguous",
+  "title": "Scenario 3: Ambiguous (Enterprise Abuse & Security Hardening)",
+  "raw_prompt": "Make our URL shortener service enterprise-ready and safe against abuse.",
+  "run_id": "run_d92cc589ca15",
+  "final_state": "COMPLETED",
+  "elapsed_seconds": 1.49,
+  "ambiguity_score": 0.65,
+  "is_clarified": false,
+  "risk_tier": "MEDIUM",
+  "user_stories": [
+    "As an API consumer, I want to make our url shortener service enterprise-ready and safe against abuse so that the system reliably fulfills the request with low latency."
+  ],
+  "acceptance_criteria": [
+    "Given valid inputs, When the API is invoked, Then the response status must be 200/201 and match schema.",
+    "Given invalid or malicious inputs, When the API is invoked, Then the request must be safely rejected with appropriate error code.",
+    "Given high concurrency, When requests are executed, Then latency P99 must remain < 50ms without data corruption.",
+    "Criterion 1: Enforce sliding-window rate limit (100 req/min per IP).",
+    "Criterion 2: Enforce SSRF blocklist on internal IP ranges."
+  ],
+  "assumptions": [
+    "Enforce sliding-window rate limit (100 req/min per IP).",
+    "Enforce SSRF blocklist on internal IP ranges."
+  ],
+  "impact_report": null
+}
